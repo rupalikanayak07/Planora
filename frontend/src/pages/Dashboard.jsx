@@ -7,7 +7,7 @@ const Dashboard = () => {
 
                 {/* Header */}
                 <h1 className="text-2xl font-semibold mb-4">
-                    Welcome back 👋
+                    Welcome back 
                 </h1>
 
                 {/* Grid */}
