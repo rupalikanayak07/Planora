@@ -42,3 +42,20 @@ def login_(request):
         },status=400)
 
 
+def studyplan(request):
+    return Response("")
+
+def add_study_session(request):
+    return Response("")
+
+
+def progress(request):
+    return Response("")
+
+
+def add_mood(request):
+    return Response("")
+
+
+def recommendation(request):
+    return Response("")
