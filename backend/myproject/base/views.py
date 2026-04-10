@@ -41,10 +41,19 @@ def login_(request):
             'error':"Invalid credentials"
         },status=400)
 
-
+@api_view(['GET','POST'])
 def studyplan(request):
-    return Response("")
-
+    if request.method =='GET':
+        plans=studyplan.objects.filter(user=request.user)
+        ser_data=StudyPlanSerializer(plans,many=True)
+        return Response(ser_data)
+    
+    if request.method=='POST':
+        ser_data=StudyPlanSerializer(data=request.data)
+        if ser_data.is_valid():
+            ser_data.save(user=request.user)
+            return Response(ser_data.data)
+        return Response(ser_data.errors)
 def add_study_session(request):
     return Response("")
 

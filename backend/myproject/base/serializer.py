@@ -21,6 +21,7 @@ class StudyPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model=StudyPlan
         fields='__all__'
+        read_only_fields = ['user']
 
 class StudySessionSerializer(serializers.ModelSerializer):
     class Meta:
