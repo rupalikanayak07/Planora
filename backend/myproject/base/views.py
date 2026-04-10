@@ -44,9 +44,9 @@ def login_(request):
 @api_view(['GET','POST'])
 def studyplan(request):
     if request.method =='GET':
-        plans=studyplan.objects.filter(user=request.user)
+        plans=StudyPlan.objects.filter(user=request.user)
         ser_data=StudyPlanSerializer(plans,many=True)
-        return Response(ser_data)
+        return Response(ser_data.data)
     
     if request.method=='POST':
         ser_data=StudyPlanSerializer(data=request.data)
