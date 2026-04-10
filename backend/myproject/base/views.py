@@ -64,9 +64,37 @@ def add_study_session(request):
 
     return Response(ser_data.errors)
 
-
+@api_view(['GET'])
 def progress(request):
-    return Response("")
+    plans=StudyPlan.objects.filter(user=request.user)
+    data=[]
+    
+
+    for plan in plans:
+        sessions= StudySession.objects.filter(
+            user=request.user,
+            study_plan=plan
+        )
+        
+
+    total_hours=sum(s.hours_studied for  s in sessions)
+
+    if plan.total_hour>0:
+        progress=(total_hours/plan.total_hour)* 100 
+    else:
+        progress=0
+
+    data.append({
+            "subject": plan.subject,
+            "topic": plan.topic,
+            "total_hours": plan.total_hour,
+            "completed_hours": total_hours,
+            "progress": round(progress, 1)
+        })
+
+    return Response(data)
+    
+
 
 
 def add_mood(request):

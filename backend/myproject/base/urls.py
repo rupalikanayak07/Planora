@@ -6,7 +6,7 @@ urlpatterns=[
     path('register/',register),
     path('studyplan/',studyplan),
     path('session/',add_study_session),
-    path('progresss/',progress),
+    path('progress/',progress),
     path('mood/',add_mood),
     path('recommendation/',recommendation),
     
