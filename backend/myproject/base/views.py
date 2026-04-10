@@ -54,8 +54,15 @@ def studyplan(request):
             ser_data.save(user=request.user)
             return Response(ser_data.data)
         return Response(ser_data.errors)
+    
+@api_view(["POST"])
 def add_study_session(request):
-    return Response("")
+    ser_data=StudySessionSerializer(data=request.data)
+    if ser_data.is_valid():
+        ser_data.save(user=request.user)
+        return Response({"message":"study session added"})
+
+    return Response(ser_data.errors)
 
 
 def progress(request):

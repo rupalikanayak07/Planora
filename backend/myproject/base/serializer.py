@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import *
+from .models import  *
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -25,10 +25,12 @@ class StudyPlanSerializer(serializers.ModelSerializer):
 
 class StudySessionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = 'StudySession'
+        model = StudySession
         fields = '__all__'
+        read_only_fields = ['user']
+
 
 class MoodSerializer(serializers.ModelSerializer):
     class Meta:
-        model='Mood'
+        model=Mood
         fields='__all__'

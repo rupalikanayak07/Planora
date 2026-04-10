@@ -17,23 +17,23 @@ class StudyPlan(models.Model):
     def __str__(self):
         return f"{self.subject} ({self.topic}) - Deadline: {self.deadline}"
     
-    class StudySession(models.Model):
-        user= models.ForeignKey(User,on_delete=models.CASCADE)
-        study_plan=models.ForeignKey("StudyPlan",on_delete=models.CASCADE)
-        hours_studied=models.FloatField()
-        date=models.DateField(auto_now_add=True)
+class StudySession(models.Model):
+    user= models.ForeignKey(User,on_delete=models.CASCADE)
+    study_plan=models.ForeignKey(StudyPlan,on_delete=models.CASCADE)
+    hours_studied=models.FloatField()
+    date=models.DateField(auto_now_add=True)
 
-    class Mood(models.Model):
-        user=models.ForeignKey(User,on_delete=models.CASCADE)
+class Mood(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
 
-        mood=models.CharField(
-            max_length=20,
-            choices=[
-            ('happy','Happy'),
-            ('tired','Tired'),
-            ('stressed','Stressed'),
-            ('motivated','Motivated')
-            ]
+    mood=models.CharField(
+        max_length=20,
+        choices=[
+        ('happy','Happy'),
+        ('tired','Tired'),
+        ('stressed','Stressed'),
+        ('motivated','Motivated')
+        ]
         )
-        date = models.DateField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
         
