@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
-from .utils import get_mood_msg
+from .utils import *
 
 
 # Create your views here.
@@ -113,6 +113,8 @@ def add_mood(request):
 
     return Response(ser_data.errors)
 
-
+@api_view(['GET'])
 def recommendation(request):
-    return Response("")
+    data = gen_recommendation(request.user)
+    return Response(data)
+    
