@@ -1,5 +1,6 @@
 import random
-import datetime
+import datetime 
+from datetime import date
 
 
 def get_mood_msg(mood):
@@ -40,3 +41,32 @@ def get_mood_msg(mood):
     
 
     return random.choice(messages.get(mood, ["Keep going!"]))
+
+
+def recomendation(plan,mood,progress):
+    today=date.today()
+    days_left=(plan.deadline-today).days
+
+    suggest_hr=2
+    if progress<30:
+        suggest_hr+=2
+    elif progress<60:
+        suggest_hr+=1
+
+
+    if mood=='tired':
+        suggest_hr-=1
+    elif mood=='motivate':
+        suggest_hr+=2
+    elif mood=='stressed':
+        return {
+            "action": "Revise easy topics",
+            "hours": 1
+        }
+    
+    if days_left<=2:
+        suggest_hr+=2
+        return {
+        "action": f"Study {plan.topic}",
+        "hours": max(suggest_hr, 1)
+    }
