@@ -115,6 +115,9 @@ def add_mood(request):
 
 @api_view(['GET'])
 def recommendation(request):
+
+    if not request.user.is_authenticated:
+        return Response({"error": "User not logged in"}, status=401)
     data = gen_recommendation(request.user)
     return Response(data)
     
