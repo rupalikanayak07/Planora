@@ -11,7 +11,7 @@ const Login = () => {
     const handelinput = (e) => {
         const { name, value } = e.target
         setformdata({ ...formdata, [name]: value })
-        console.log(formdata);
+       
 
     }
 
@@ -21,7 +21,8 @@ const Login = () => {
             const { data } = await axios.post("http://127.0.0.1:8000/api/login/", formdata)
             localStorage.setItem("access", data.access)
             localStorage.setItem("refresh", data.refresh)
-
+           
+            
             setformdata({
                 username: "",
                 password: ''

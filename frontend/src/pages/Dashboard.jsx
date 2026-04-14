@@ -1,10 +1,28 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import AddMood from './AddMood'
+
+import Moodpopup from './Moodpopup'
+
 
 const Dashboard = () => {
     const [recommendation, setrec] = useState(null)
     const [progress, setprogress] = useState([])
+
+
+    // mood popup
+
+    const [showpopup, setshowpopup] = useState(false)
+
+    useEffect(() => {
+        const lastMoodDate = localStorage.getItem('moodDate')
+        const today = new Date().toDateString()
+
+        if (lastMoodDate !== today) {
+            setshowpopup(true)
+        }
+    }, [])
+
+
     const fdata = async () => {
         try {
             const token = localStorage.getItem("access");
@@ -38,6 +56,16 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-100 to-pink-100 p-6">
+
+            {/* mood pop up ui */}
+
+            {
+                showpopup && (
+                    <Moodpopup onClose={() => setshowpopup(false)} />
+                )
+            }
+
+            {/* dashboard ui */}
 
             {/* 🔥 Recommendation Card */}
             {recommendation && (
@@ -92,7 +120,8 @@ const Dashboard = () => {
                     </div>
                 ))}
             </div>
-            <AddMood />
+
+
         </div>
 
 
