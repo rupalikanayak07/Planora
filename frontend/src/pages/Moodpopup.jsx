@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 
-const Moodpopup = ({onClose}) => {
+const Moodpopup = ({ onClose }) => {
 
     const [selectedMood, setSelectedMood] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const Moodpopup = ({onClose}) => {
             await axios.post(
                 "http://127.0.0.1:8000/api/mood/",
                 { mood: selectedMood },
-                 {
+                {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     }
@@ -91,7 +91,8 @@ const Moodpopup = ({onClose}) => {
                 {/*  Message Preview */}
                 <div className="h-16 mb-5 flex items-center justify-center">
                     {current ? (
-                        <p className="text-sm text-gray-700 italic text-center transition-opacity duration-300">
+                        <p className="text-sm text-gray-700 italic text-center transition-opacity duration-500">
+
                             {current.msg}
                         </p>
                     ) : (

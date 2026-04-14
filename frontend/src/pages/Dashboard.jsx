@@ -14,6 +14,8 @@ const Dashboard = () => {
     const [showpopup, setshowpopup] = useState(false)
 
     useEffect(() => {
+
+
         const lastMoodDate = localStorage.getItem('moodDate')
         const today = new Date().toDateString()
 
