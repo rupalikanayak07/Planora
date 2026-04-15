@@ -1,9 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import Progress from './Progress'
 
 const Recomendation = () => {
     const [recommendation, setrecomendation] = useState([])
-    const [progress, setprogress] = useState([])
 
     const fdata = async (params) => {
         const token = localStorage.getItem("access");
@@ -16,21 +16,9 @@ const Recomendation = () => {
                 }
             )
             setrecomendation(res.data)
-
-            const progressRes = await axios.get('http://127.0.0.1:8000/api/progress/',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            setprogress(progressRes.data)
-
-
         } catch (error) {
             console.log(error)
         }
-
     }
 
     useEffect(() => {
@@ -39,12 +27,13 @@ const Recomendation = () => {
 
     return (
 
-        <div className="min-h bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-8">
+        <div className="min-h">
+
 
             {/* 💎 MAIN LUXURY CARD */}
             <div className="max-w-2xl mx-auto">
 
-                <div className="bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-8 transition hover:scale-[1.02] duration-300">
+                <div className="bg-white backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-8 transition hover:scale-[1.02] duration-300">
 
                     {/* HEADER */}
                     <div className="flex justify-between items-start">
@@ -74,19 +63,7 @@ const Recomendation = () => {
                     </div>
 
                     {/* PROGRESS BAR */}
-                    <div className="mt-6">
-                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                            <span>Progress</span>
-                            <span>{recommendation.progress}%</span>
-                        </div>
-
-                        <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                                className="h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
-                                style={{ width: `${recommendation.progress}%` }}
-                            ></div>
-                        </div>
-                    </div>
+                    <Progress />
 
                     {/* HOURS */}
                     <div className="mt-6 flex items-center justify-between">
@@ -149,8 +126,11 @@ const Recomendation = () => {
                 </div>
             </div>
 
-            
+
+
         </div>
+
+
     )
 }
 

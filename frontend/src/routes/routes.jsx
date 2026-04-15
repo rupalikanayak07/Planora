@@ -6,17 +6,19 @@ import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 
 
-export const routes=createBrowserRouter([
+
+export const routes = createBrowserRouter([
     {
-        path:'/',
-        element:<Login/>
+        path: '/',
+        element: <Login />
     },
     {
-        path:'/register',
-        element:<Register/>
+        path: '/register',
+        element: <Register />
     },
     {
-        path:'/dashboard',
-        element:<Dashboard/>
+        path: '/dashboard',
+        element: <Dashboard />,
+       
     },
 ])
