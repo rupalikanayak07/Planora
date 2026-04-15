@@ -8,6 +8,7 @@ class StudyPlan(models.Model):
     subject=models.CharField(max_length=100)
     topic=models.CharField(max_length=200)
     deadline=models.DateField()
+    is_missed = models.BooleanField(default=False)
     total_hour=models.IntegerField()
     difficulty = models.CharField(
         max_length=10,

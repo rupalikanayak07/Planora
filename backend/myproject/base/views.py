@@ -69,7 +69,7 @@ def add_study_session(request):
 def progress(request):
     plans=StudyPlan.objects.filter(user=request.user)
     data=[]
-    
+    print("PLANS:", plans)
 
     for plan in plans:
         sessions= StudySession.objects.filter(
@@ -119,5 +119,6 @@ def recommendation(request):
     if not request.user.is_authenticated:
         return Response({"error": "User not logged in"}, status=401)
     data = gen_recommendation(request.user)
+   
     return Response(data)
     

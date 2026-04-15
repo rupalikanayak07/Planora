@@ -1,6 +1,6 @@
 import random
 import datetime 
-from datetime import date
+from datetime import date, timedelta
 from .models import *
 
 def get_mood_msg(mood):
@@ -66,23 +66,19 @@ def gen_recommendation(user):
         days_left = (plan.deadline - today).days
         remaining_hours = plan.total_hour - total_done
 
-        if days_left <= 0:
-            continue
+        # if deadline is missed
+
+        if days_left <= 0 and progress < 100:
+            plan.is_missed=True
+            plan.save()
+            days_left = 2    
+            priority = (remaining_hours / days_left) + 5 
+  
+          
 
         #  BASE PRIORITY
         priority = remaining_hours / days_left
 
-        #  ADD INTELLIGENCE
-        if progress < 50:
-            priority += 2
-
-        if days_left < 3:
-            priority += 3
-
-        if plan.difficulty == "hard":
-            priority += 2
-        elif plan.difficulty == "easy":
-            priority -= 1
 
         #  SELECT BEST PLAN
         if priority > highest_priority:
@@ -90,10 +86,12 @@ def gen_recommendation(user):
 
             hours = remaining_hours / days_left
 
+
             #  Mood adjustment
             message = "Stay consistent 💪"
-
-            if mood == "tired":
+            if plan.is_missed:
+               message = " Deadline missed! Let's recover fast 🚀"
+            elif mood == "tired":
                 hours *= 0.7
                 message = "Take it light today 😌"
             elif mood == "stressed":
@@ -103,20 +101,30 @@ def gen_recommendation(user):
                 hours *= 1.3
                 message = "Push your limits today 🚀"
 
+
             #  Reasons (VERY IMPRESSIVE)
             reasons = []
 
+            if plan.is_missed:
+                reasons.append("Deadline missed")
+                reasons.append("High priority recovery")
+            elif days_left < 3 and days_left >= 0:
+                priority += 3
+                reasons.append("Deadline is near")
+                
             if progress < 50:
+                priority += 2
                 reasons.append("Low progress")
 
-            if days_left < 3:
-                reasons.append("Deadline is near")
-
+           
             if plan.difficulty == "hard":
+                priority += 2
                 reasons.append("High difficulty")
+            if plan.difficulty == "easy":
+                priority -= 1
 
             best_plan = plan
-
+            
             final_data = {
                 "subject": plan.subject,
                 "topic": plan.topic,
@@ -125,5 +133,7 @@ def gen_recommendation(user):
                 "message": message,
                 "reasons": reasons
             }
+
+    
 
     return final_data
