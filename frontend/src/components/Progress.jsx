@@ -46,9 +46,7 @@ const Progress = () => {
 
                 return (
                     <div
-                        key={index}
-                       
-                    >
+                        key={index}>
                         {/*  DONUT CHART */}
                         <div className="relative flex items-center justify-center" >
 

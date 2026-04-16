@@ -1,13 +1,14 @@
 
 import React, { useEffect, useState } from 'react'
 
-import Moodpopup from './Moodpopup'
 
-import Recomendation from './Recomendation'
+
+import Recomendation from '../components/Recomendation'
+import Moodpopup from '../components/Moodpopup'
 
 
 const Dashboard = () => {
-    
+
 
     // mood popup
 
@@ -23,7 +24,7 @@ const Dashboard = () => {
     }, [])
 
 
-    
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-100 to-pink-100 p-6">
@@ -36,8 +37,8 @@ const Dashboard = () => {
                 )
             }
 
-            <Recomendation/>
-           
+            <Recomendation />
+
 
         </div>
 

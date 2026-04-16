@@ -126,6 +126,7 @@ def gen_recommendation(user):
             best_plan = plan
             
             final_data = {
+                "id":plan.id,
                 "subject": plan.subject,
                 "topic": plan.topic,
                 "hours": round(hours, 1),

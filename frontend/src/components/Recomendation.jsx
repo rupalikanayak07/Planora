@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Progress from './Progress'
+import StartSession from './StartSession'
+
 
 const Recomendation = () => {
     const [recommendation, setrecomendation] = useState([])
@@ -16,6 +18,7 @@ const Recomendation = () => {
                 }
             )
             setrecomendation(res.data)
+            console.log("hello")
         } catch (error) {
             console.log(error)
         }
@@ -62,7 +65,7 @@ const Recomendation = () => {
                         </p>
                     </div>
 
-                    {/* PROGRESS BAR */}
+                    {/* PROGRESS graph */}
                     <Progress />
 
                     {/* HOURS */}
@@ -118,9 +121,7 @@ const Recomendation = () => {
                             ✨ Generated based on your study behavior
                         </p>
 
-                        <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2 rounded-xl text-sm shadow-lg hover:shadow-xl transition">
-                            Start Session
-                        </button>
+                        <StartSession recommendation={recommendation} fetchdata={fdata} />
                     </div>
 
                 </div>

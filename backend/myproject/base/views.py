@@ -69,7 +69,7 @@ def add_study_session(request):
 def progress(request):
     plans=StudyPlan.objects.filter(user=request.user)
     data=[]
-    print("PLANS:", plans)
+    
 
     for plan in plans:
         sessions= StudySession.objects.filter(
