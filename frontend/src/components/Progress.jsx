@@ -2,30 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
-const Progress = () => {
-    const [progress, setprogress] = useState([])
-    const fdata = async (params) => {
-        const token = localStorage.getItem("access");
-        try {
-            const progressRes = await axios.get('http://127.0.0.1:8000/api/progress/',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            setprogress(progressRes.data)
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        fdata()
-    }, [])
-
-
+const Progress = ({progress}) => {
+   
     return (
         <div>
 

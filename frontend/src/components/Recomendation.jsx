@@ -6,8 +6,9 @@ import StartSession from './StartSession'
 
 const Recomendation = () => {
     const [recommendation, setrecomendation] = useState([])
+    const [progress, setprogress] = useState([])
 
-    const fdata = async (params) => {
+    const frecdata = async (params) => {
         const token = localStorage.getItem("access");
         try {
             const res = await axios.get('http://127.0.0.1:8000/api/recommendation/',
@@ -24,10 +25,29 @@ const Recomendation = () => {
         }
     }
 
+    const fetchprogress = async (params) => {
+        const token = localStorage.getItem("access");
+        try {
+            const progressRes = await axios.get('http://127.0.0.1:8000/api/progress/',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            setprogress(progressRes.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
-        fdata()
+        frecdata()
+        fetchprogress()
     }, [])
 
+    
     return (
 
         <div className="min-h">
@@ -66,7 +86,8 @@ const Recomendation = () => {
                     </div>
 
                     {/* PROGRESS graph */}
-                    <Progress />
+                    <Progress progress={progress}/>
+
 
                     {/* HOURS */}
                     <div className="mt-6 flex items-center justify-between">
@@ -121,7 +142,9 @@ const Recomendation = () => {
                             ✨ Generated based on your study behavior
                         </p>
 
-                        <StartSession recommendation={recommendation} fetchdata={fdata} />
+                        <StartSession recommendation={recommendation} fetchdata={()=>{frecdata();
+                            fetchprogress();
+                        }} />
                     </div>
 
                 </div>

@@ -5,8 +5,7 @@ const StartSession = ({ recommendation, fetchdata }) => {
     const [seconds, setSeconds] = useState(0)
     const [running, setRunning] = useState(false)
 
-
-
+    
     useEffect(() => {
         let interval;
 
