@@ -47,111 +47,122 @@ const Recomendation = () => {
         fetchprogress()
     }, [])
 
-    
+
     return (
 
-        <div className="min-h">
+        <div className="min-h-screen bg-gradient-to-br from-[#fdfbff] via-[#f6f3ff] to-[#eef4ff] p-6">
 
+            <div className="max-w-5xl mx-auto space-y-6">
 
-            {/* 💎 MAIN LUXURY CARD */}
-            <div className="max-w-2xl mx-auto">
-
-                <div className="bg-white backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-8 transition hover:scale-[1.02] duration-300">
-
-                    {/* HEADER */}
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-800">
-                                📚 Study Recommendation
-                            </h2>
-                            <p className="text-sm text-gray-500 mt-1">
-                                AI-powered personalized plan
-                            </p>
-                        </div>
-
-                        {/* STATUS BADGE */}
-                        <span className="bg-red-100 text-red-600 px-3 py-1 text-xs rounded-full font-semibold">
-                            ⚠ Recovery Mode
-                        </span>
+                {/* 🌸 HEADER BAR */}
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-2xl font-semibold text-gray-800">
+                            📚 Your Study Plan
+                        </h1>
+                        <p className="text-sm text-gray-400">
+                            Personalized insights for today
+                        </p>
                     </div>
 
-                    {/* SUBJECT */}
-                    <div className="mt-6">
-                        <h3 className="text-xl font-semibold text-gray-800">
+                    <span className="bg-red-50 text-red-500 px-4 py-1 rounded-full text-sm border border-red-200 shadow-sm">
+                        ⚠ Recovery Mode
+                    </span>
+                </div>
+
+                {/* 💎 TOP GRID */}
+                <div className="grid md:grid-cols-3 gap-6">
+
+                    {/* 📘 SUBJECT CARD */}
+                    <div className="col-span-2 bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
+                        <h3 className="text-lg text-gray-500 mb-2">Focus Subject</h3>
+                        <p className="text-2xl font-semibold text-gray-800">
                             {recommendation.subject}
-                        </h3>
-                        <p className="text-gray-500">
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">
                             {recommendation.topic}
                         </p>
                     </div>
 
-                    {/* PROGRESS graph */}
-                    <Progress progress={progress}/>
-
-
-                    {/* HOURS */}
-                    <div className="mt-6 flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500">Recommended Study Time</p>
-                            <p className="text-lg font-semibold text-gray-800">
-                                ⏱ {recommendation.hours} hrs
-                            </p>
-                        </div>
-
-                        {/* ICON CARD */}
-                        <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                            📖
-                        </div>
-                    </div>
-
-                    {/* MESSAGE */}
-                    <div className="mt-6 bg-purple-50 border border-purple-100 p-4 rounded-2xl">
-                        <p className="text-sm text-purple-700 italic">
-                            {recommendation.message}
+                    {/* ⏱ HOURS CARD */}
+                    <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-3xl shadow-md border border-white/60 flex flex-col justify-center items-center text-center">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">
+                            Study Time
+                        </p>
+                        <p className="text-3xl font-bold text-gray-800 mt-2">
+                            {recommendation.hours}h
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                            Recommended today
                         </p>
                     </div>
-
-                    {/* REASONS */}
-                    <div className="mt-6 flex flex-wrap gap-2">
-                        {recommendation.reasons?.map((r, i) => {
-                            let style =
-                                "bg-gray-100 text-gray-600";
-
-                            if (r.includes("Deadline missed")) {
-                                style = "bg-red-100 text-red-600";
-                            } else if (r.includes("Low progress")) {
-                                style = "bg-blue-100 text-blue-600";
-                            } else if (r.includes("High priority")) {
-                                style = "bg-purple-100 text-purple-600";
-                            }
-
-                            return (
-                                <span
-                                    key={i}
-                                    className={`px-3 py-1 text-xs rounded-full font-medium ${style}`}
-                                >
-                                    {r}
-                                </span>
-                            );
-                        })}
-                    </div>
-
-                    {/* FOOTER */}
-                    <div className="mt-8 flex justify-between items-center">
-                        <p className="text-xs text-gray-400">
-                            ✨ Generated based on your study behavior
-                        </p>
-
-                        <StartSession recommendation={recommendation} fetchdata={()=>{frecdata();
-                            fetchprogress();
-                        }} />
-                    </div>
-
                 </div>
+
+                {/* 📊 PROGRESS + MESSAGE */}
+                <div className="grid md:grid-cols-2 gap-6">
+
+                    {/* 📊 PROGRESS */}
+                    <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
+                        <h3 className="text-sm text-gray-500 mb-3">
+                            📊 Progress Overview
+                        </h3>
+
+                        <Progress progress={progress} />
+                    </div>
+
+                    {/* 💬 MESSAGE */}
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-3xl border border-purple-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-sm text-gray-500 mb-2">
+                                💬 Insight
+                            </h3>
+
+                            <p className="text-purple-600 italic text-sm leading-relaxed">
+                                {recommendation.message}
+                            </p>
+
+                            <StartSession
+                                recommendation={recommendation}
+                                fetchdata={() => {
+                                    frecdata();
+                                    fetchprogress();
+                                }}
+                            />
+
+                        </div>
+
+                        {/* REASONS */}
+                        <div className="mt-4 flex flex-wrap gap-2">
+                            {recommendation.reasons?.map((r, i) => {
+                                let style = "bg-gray-100 text-gray-600";
+
+                                if (r.includes("Deadline missed")) {
+                                    style = "bg-red-50 text-red-500";
+                                } else if (r.includes("Low progress")) {
+                                    style = "bg-blue-50 text-blue-500";
+                                } else if (r.includes("High priority")) {
+                                    style = "bg-purple-50 text-purple-500";
+                                }
+
+                                return (
+                                    <span
+                                        key={i}
+                                        className={`px-3 py-1 text-xs rounded-full border ${style}`}
+                                    >
+                                        {r}
+                                    </span>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+
+                {/* 🚀 ACTION BAR */}
+
+
+
+
             </div>
-
-
-
         </div>
 
 

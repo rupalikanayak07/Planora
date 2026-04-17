@@ -5,7 +5,7 @@ const StartSession = ({ recommendation, fetchdata }) => {
     const [seconds, setSeconds] = useState(0)
     const [running, setRunning] = useState(false)
 
-    
+
     useEffect(() => {
         let interval;
 
@@ -60,22 +60,63 @@ const StartSession = ({ recommendation, fetchdata }) => {
     };
 
     return (
-        <div className='flex flex-col gap-2 pt-2'>
-            {!running ? (
-                <button onClick={startStudy} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2 rounded-xl text-sm shadow-lg hover:shadow-xl transition">
-                    Start Session
-                </button>
-            ) : (<button onClick={stopStudy} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2 rounded-xl text-sm shadow-lg hover:shadow-xl transition">
-                Stop Session
-            </button>)}
+        
 
+            <div className="bg-gradient-to-br from-white to-purple-50 border border-purple-100 rounded-3xl p-5 shadow-lg flex flex-col items-center gap-4 transition hover:shadow-xl">
 
-            <div className="text-3xl font-bold text-purple-600 mb-4">
-                ⏱ {formatTime(seconds)}
+                {/* 🌸 TITLE */}
+                <p className="text-xs text-gray-400 uppercase tracking-widest">
+                    Study Session
+                </p>
+
+                {/* ⏱ TIMER */}
+                <div className="relative flex items-center justify-center">
+
+                    {/* SOFT GLOW */}
+                    <div className="absolute w-28 h-28 bg-purple-200 rounded-full blur-2xl opacity-40"></div>
+
+                    {/* TIMER BOX */}
+                    <div className="relative bg-white px-6 py-4 rounded-2xl shadow-inner border border-gray-100">
+                        <span className="text-3xl font-bold text-purple-700 tracking-widest">
+                            {formatTime(seconds)}
+                        </span>
+                    </div>
+                </div>
+
+                {/* 🔘 BUTTON */}
+                {!running ? (
+                    <button
+                        onClick={startStudy}
+                        className="px-6 py-2.5 rounded-xl text-sm font-semibold 
+               bg-gradient-to-r from-purple-400 to-pink-400 text-white
+               shadow-md hover:shadow-lg 
+               hover:scale-[1.03] active:scale-95 
+               transition duration-300 flex items-center justify-center gap-2"
+                    >
+                        <span className="text-xs opacity-90">▶</span>
+                        Start Focus
+                    </button>
+                ) : (
+                    <button
+                        onClick={stopStudy}
+                        className="px-6 py-2.5 rounded-xl text-sm font-semibold 
+               bg-gradient-to-r from-rose-400 to-pink-400 text-white
+               shadow-md hover:shadow-lg 
+               hover:scale-[1.03] active:scale-95 
+               transition duration-300 flex items-center justify-center gap-2"
+                    >
+                        <span className="text-xs opacity-90">■</span>
+                        End Session
+                    </button>
+                )}
+
+                {/* ✨ STATUS */}
+                <p className="text-xs text-gray-400">
+                    {running ? "Session in progress..." : "Ready to start"}
+                </p>
+
             </div>
-
-        </div>
-
+       
 
     )
 }
