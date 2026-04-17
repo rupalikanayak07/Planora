@@ -1,131 +1,219 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useState } from 'react'
 
 const AddStudyplan = () => {
+
+    const [formdata, setformdata] = useState({
+        subject: "",
+        topic: "",
+        total_hour: "",
+        difficulty: "",
+        deadline: "",
+    })
+    
+
+    const handelinput = (e) => {
+        setformdata({ ...formdata, [e.target.name]: e.target.value })
+        
+    }
+
+    const handelDifficulty = (level) => {
+        setformdata({ ...formdata, difficulty: level })
+    }
+
+    // calculate days left
+    const getDaysLeft = () => {
+        if (!formdata.deadline) return null;
+        const today = new Date();
+        const selected = new Date(formdata.deadline);
+
+        const diff = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
+
+        return diff;
+    };
+
+    const validateForm = () => {
+        if (!formdata.subject) return "Subject required";
+        if (!formdata.topic) return "Topic required";
+        if (!formdata.total_hour) return "Hours required";
+        if (!formdata.difficulty) return "Select difficulty";
+        if (!formdata.deadline) return "Deadline required";
+
+        return null;
+    };
+    const handelSubmit = async (e) => {
+        e.preventDefault()
+        const error = validateForm();
+        if (error) {
+            alert(error);
+            return;
+        }
+        try {
+            const token = localStorage.getItem("access")
+            const res = await axios.post("http://127.0.0.1:8000/api/studyplan/",
+                formdata,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
+            console.log(res.data);
+            setformdata({
+                subject: "",
+                topic: "",
+                total_hour: "",
+                difficulty: "",
+                deadline: "",
+
+            });
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-[#fdfbff] via-[#f6f3ff] to-[#eef4ff] py-10 px-4">
 
-            {/* 🌸 HEADER */}
-            <div className="max-w-4xl mx-auto mb-6">
-                <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-lg border border-white/40">
-                    <h1 className="text-2xl font-bold text-gray-800">
-                        🌿 Study Tracker
-                    </h1>
-                    <p className="text-gray-500 text-sm mt-1">
-                        Track your daily focus & progress
-                    </p>
+            <div className="max-w-3xl mx-auto">
 
-                    <div className="mt-4 flex justify-between">
-                        <div>
-                            <p className="text-xs text-gray-400">Today</p>
-                            <p className="text-lg font-semibold text-purple-600">
-                                ⏱ 2.4 hrs
-                            </p>
-                        </div>
+                <form onSubmit={handelSubmit} className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl border border-white/60 p-8 space-y-8">
 
-                        <div>
-                            <p className="text-xs text-gray-400">Sessions</p>
-                            <p className="text-lg font-semibold text-pink-500">
-                                🎯 3
-                            </p>
-                        </div>
-
-                        <div>
-                            <p className="text-xs text-gray-400">Focus</p>
-                            <p className="text-lg font-semibold text-blue-500">
-                                ⚡ Good
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* 💎 MAIN GRID */}
-            <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
-
-                {/* ⏱ SESSION CARD */}
-                <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-lg border border-white/40 text-center">
-
-                    <h2 className="text-lg font-semibold text-gray-700">
-                        ⏱ Current Session
-                    </h2>
-
-                    <div className="text-4xl font-bold text-purple-600 mt-4">
-                        00:45:12
-                    </div>
-
-                    <p className="text-sm text-gray-500 mt-2">
-                        Stay focused, you're doing great ✨
-                    </p>
-
-                    <button className="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-xl shadow-md hover:scale-105 transition">
-                        ▶ Start Session
-                    </button>
-                </div>
-
-                {/* 📊 PROGRESS CARD */}
-                <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-lg border border-white/40">
-
-                    <h2 className="text-lg font-semibold text-gray-700">
-                        📊 Today's Progress
-                    </h2>
-
-                    <div className="mt-6">
-                        <p className="text-sm text-gray-500">DBMS - Normalization</p>
-
-                        <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                            <div className="bg-purple-500 h-2 rounded w-[60%]"></div>
-                        </div>
-
-                        <p className="text-xs mt-2 text-gray-500">
-                            6 / 10 hrs completed
+                    {/* 🌸 HEADER */}
+                    <div>
+                        <h2 className="text-2xl font-semibold text-gray-800">
+                            📚 Create Study Plan
+                        </h2>
+                        <p className="text-sm text-gray-400 mt-1">
+                            Design your learning journey beautifully
                         </p>
                     </div>
-                </div>
 
-                {/* 📅 SESSION HISTORY */}
-                <div className="md:col-span-2 bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-lg border border-white/40">
-
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                        📅 Session History
-                    </h2>
-
-                    <div className="space-y-3">
-
-                        {/* ITEM */}
-                        <div className="flex justify-between items-center bg-purple-50 p-3 rounded-xl">
-                            <div>
-                                <p className="text-sm font-medium text-gray-700">
-                                    DBMS - Normalization
-                                </p>
-                                <p className="text-xs text-gray-400">
-                                    Today • 10:30 AM
-                                </p>
-                            </div>
-
-                            <span className="text-purple-600 font-semibold">
-                                ⏱ 1.2 hrs
-                            </span>
+                    {/* 📘 SUBJECT + TOPIC */}
+                    <div className="grid md:grid-cols-2 gap-5">
+                        <div>
+                            <label className="text-xs text-gray-400 uppercase tracking-wide">Subject</label>
+                            <input onChange={handelinput} name='subject' value={formdata.subject}
+                                type="text"
+                                placeholder="eg: DBMS"
+                                className="w-full mt-2 px-4 py-3 rounded-2xl bg-gray-50 border border-gray-200 
+                       focus:ring-2 focus:ring-purple-300 outline-none transition"
+                            />
                         </div>
 
-                        {/* ITEM */}
-                        <div className="flex justify-between items-center bg-pink-50 p-3 rounded-xl">
-                            <div>
-                                <p className="text-sm font-medium text-gray-700">
-                                    OS - Scheduling
-                                </p>
-                                <p className="text-xs text-gray-400">
-                                    Today • 8:00 AM
-                                </p>
-                            </div>
-
-                            <span className="text-pink-600 font-semibold">
-                                ⏱ 0.8 hrs
-                            </span>
+                        <div>
+                            <label className="text-xs text-gray-400 uppercase tracking-wide">Topic</label>
+                            <input onChange={handelinput} name='topic' value={formdata.topic}
+                                type="text"
+                                placeholder="eg: Normalization"
+                                className="w-full mt-2 px-4 py-3 rounded-2xl bg-gray-50 border border-gray-200 
+                       focus:ring-2 focus:ring-purple-300 outline-none transition"
+                            />
                         </div>
-
                     </div>
-                </div>
 
+                    {/* ⏱ HOURS */}
+                    <div>
+                        <label className="text-xs text-gray-400 uppercase tracking-wide">Total Study Hours</label>
+                        <input onChange={handelinput} name='total_hour' value={formdata.total_hour}
+                            type="number"
+                            placeholder="eg:10"
+                            className="w-full mt-2 px-4 py-3 rounded-2xl bg-gray-50 border border-gray-200 
+                     focus:ring-2 focus:ring-purple-300 outline-none transition"
+                        />
+                    </div>
+
+                    {/*  DIFFICULTY (BEAUTIFUL OPTIONS) */}
+                    <div>
+                        <label className="text-xs text-gray-400 uppercase tracking-wide">Difficulty</label>
+
+                        <div className="grid grid-cols-3 gap-4 mt-3">
+
+                            {/* EASY */}
+                            <div
+                                onClick={() => handelDifficulty("easy")}
+                                className={`cursor-pointer p-4 rounded-2xl border transition
+                                 ${formdata.difficulty === "easy"
+                                        ? "bg-green-100 border-green-400 ring-2 ring-green-300 scale-[1.02]"
+                                        : "bg-green-50 border-green-200 hover:shadow-md"
+                                    }`}
+                            >
+                                <p className="text-sm font-semibold text-green-600">Easy</p>
+                                <p className="text-xs text-gray-400 mt-1">Light workload</p>
+
+                                {formdata.difficulty === "easy" && (
+                                    <span className="text-xs text-green-600 mt-2 block">✔ Selected</span>
+                                )}
+                            </div>
+
+                            {/* MEDIUM */}
+                            <div
+                                onClick={() => handelDifficulty("medium")}
+                                className={`cursor-pointer p-4 rounded-2xl border transition
+                                ${formdata.difficulty === "medium"
+                                        ? "bg-yellow-100 border-yellow-400 ring-2 ring-yellow-300 scale-[1.02]"
+                                        : "bg-yellow-50 border-yellow-200 hover:shadow-md"
+                                    }`}
+                            >
+                                <p className="text-sm font-semibold text-yellow-600">Medium</p>
+                                <p className="text-xs text-gray-400 mt-1">Balanced effort</p>
+
+                                {formdata.difficulty === "medium" && (
+                                    <span className="text-xs text-yellow-600 mt-2 block">✔ Selected</span>
+                                )}
+                            </div>
+
+                            {/* HARD */}
+                            <div
+                                onClick={() => handelDifficulty("hard")}
+                                className={`cursor-pointer p-4 rounded-2xl border transition
+                                    ${formdata.difficulty === "hard"
+                                        ? "bg-red-100 border-red-400 ring-2 ring-red-300 scale-[1.02]"
+                                        : "bg-red-50 border-red-200 hover:shadow-md"
+                                    }`}
+                            >
+                                <p className="text-sm font-semibold text-red-600">Hard</p>
+                                <p className="text-xs text-gray-400 mt-1">High focus needed</p>
+
+                                {formdata.difficulty === "hard" && (
+                                    <span className="text-xs text-red-600 mt-2 block">✔ Selected</span>
+                                )}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* 📅 DEADLINE */}
+                    <div name='deadline'>
+                        <label className="text-xs text-gray-400 uppercase tracking-wide">Deadline</label>
+                        <input onChange={handelinput} name='deadline' value={formdata.deadline}
+                            type="date"
+                            className="w-full mt-2 px-4 py-3 rounded-2xl bg-gray-50 border border-gray-200 
+                     focus:ring-2 focus:ring-purple-300 outline-none transition"
+                        />
+                        {formdata.deadline && (
+                            <p className="text-xs text-purple-500 mt-1">
+                                ⏳ {getDaysLeft()} days left
+                            </p>
+                        )}
+                    </div>
+
+
+                    {/* 🚀 BUTTON */}
+                    <div className="flex justify-end pt-4">
+                        <button className="px-6 py-2.5 rounded-xl text-sm font-semibold 
+                           bg-gradient-to-r from-purple-400 to-pink-400 text-white
+                           shadow-md hover:shadow-lg hover:scale-[1.03] 
+                           active:scale-95 transition duration-300">
+                            Save Plan
+                        </button>
+                    </div>
+
+                </form>
             </div>
         </div>
     );

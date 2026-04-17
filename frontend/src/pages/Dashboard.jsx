@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Recomendation from '../components/Recomendation'
 import Moodpopup from '../components/Moodpopup'
+import AddStudyplan from '../components/AddStudyplan'
 
 
 const Dashboard = () => {
@@ -35,7 +36,7 @@ const Dashboard = () => {
 
             <Recomendation />
 
-
+            <AddStudyplan/>
         </div>
 
 

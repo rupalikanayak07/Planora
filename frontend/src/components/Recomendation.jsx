@@ -19,7 +19,7 @@ const Recomendation = () => {
                 }
             )
             setrecomendation(res.data)
-            console.log("hello")
+           
         } catch (error) {
             console.log(error)
         }
