@@ -4,6 +4,8 @@ import Layout from '../pages/Layout'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
+import AddStudyplan from '../components/AddStudyplan'
+import Moodpopup from '../components/Moodpopup'
 
 
 
@@ -19,6 +21,16 @@ export const routes = createBrowserRouter([
     {
         path: '/dashboard',
         element: <Dashboard />,
+       
+    },
+    {
+        path: '/plan',
+        element: <AddStudyplan />,
+       
+    },
+    {
+        path: '/mood',
+        element: <Moodpopup />,
        
     },
 ])

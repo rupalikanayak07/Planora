@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Recomendation from '../components/Recomendation'
 import Moodpopup from '../components/Moodpopup'
 import AddStudyplan from '../components/AddStudyplan'
+import Navbar from '../components/Navbar'
 
 
 const Dashboard = () => {
+
+    const [refreshNav, setRefreshNav] = useState(false);
+
     // mood popup
 
     const [showpopup, setshowpopup] = useState(false)
@@ -24,7 +28,7 @@ const Dashboard = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-100 to-pink-100 p-6">
+        <div >
 
             {/* mood pop up ui */}
 
@@ -34,9 +38,11 @@ const Dashboard = () => {
                 )
             }
 
+            <Navbar refreshTrigger={refreshNav}/>
+
             <Recomendation />
 
-            <AddStudyplan/>
+          
         </div>
 
 

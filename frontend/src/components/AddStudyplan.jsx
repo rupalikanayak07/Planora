@@ -1,8 +1,10 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const AddStudyplan = () => {
 
+    const navigate=useNavigate()
     const [formdata, setformdata] = useState({
         subject: "",
         topic: "",
@@ -58,7 +60,8 @@ const AddStudyplan = () => {
                     },
                 }
             )
-            console.log(res.data);
+
+           navigate('/dashboard')
             setformdata({
                 subject: "",
                 topic: "",

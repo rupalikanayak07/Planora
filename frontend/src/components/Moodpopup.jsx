@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Moodpopup = ({ onClose }) => {
 
     const [selectedMood, setSelectedMood] = useState(null);
     const [loading, setLoading] = useState(false);
+    const navigate=useNavigate()
 
     const moods = [
         { name: "happy", emoji: "😄", msg: "You're in a great space—keep it flowing ✨" },
@@ -32,6 +34,7 @@ const Moodpopup = ({ onClose }) => {
 
             localStorage.setItem("moodDate", new Date().toDateString());
             onClose && onClose();
+            navigate('/dashboard')
         } catch (err) {
             console.log(err);
         } finally {
