@@ -3,65 +3,68 @@ import React, { useEffect, useState } from 'react'
 import Progress from './Progress'
 import StartSession from './StartSession'
 
-
 const Recomendation = () => {
 
     const [topPlan, setTopPlan] = useState(null)
     const [otherPlans, setOtherPlans] = useState([])
+    const [progress, setprogress] = useState([])
+    const [openId, setOpenId] = useState(null);
 
-    const [progress,setprogress]=useState([])
-    const frecdata = async (params) => {
+    //  FETCH RECOMMENDATION
+    const frecdata = async () => {
         const token = localStorage.getItem("access");
         try {
-            const res = await axios.get('http://127.0.0.1:8000/api/recommendation/',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            // console.log(res.data.others)
+            const res = await axios.get('http://127.0.0.1:8000/api/recommendation/', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
             setTopPlan(res.data.top)
             setOtherPlans(res.data.others)
-
         } catch (error) {
             console.log(error)
         }
     }
 
-    const fetchprogress = async (params) => {
+    //  FETCH PROGRESS
+    const fetchprogress = async () => {
         const token = localStorage.getItem("access");
         try {
-            const progressRes = await axios.get('http://127.0.0.1:8000/api/progress/',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            setprogress(progressRes.data)
-
+            const progressRes = await axios.get('http://127.0.0.1:8000/api/progress/', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            setprogress(Array.isArray(progressRes.data) ? progressRes.data : [])
         } catch (error) {
             console.log(error)
         }
     }
+
+    //  MATCH PROGRESS WITH PLAN
+    const getProgress = (planId) => {
+        return progress.find(p => p.id === planId)
+    }
+
+    const topProgress = getProgress(topPlan?.id)
 
     useEffect(() => {
         frecdata()
         fetchprogress()
     }, [])
 
-
     return (
-
         <div className="min-h-screen bg-gradient-to-br from-[#fdfbff] via-[#f6f3ff] to-[#eef4ff] p-6">
 
-            <div className="max-w-5xl mx-auto space-y-6">
+            <div className="max-w-5xl mx-auto space-y-8">
 
+                {/* 🌸 EMPTY STATE */}
+                {!topPlan && (
+                    <div className="text-center mt-20 text-gray-400">
+                        No study plans yet 📭
+                    </div>
+                )}
+
+                {/* 🔥 TOP PLAN */}
                 {topPlan && (
-                    <div className="max-w-5xl mx-auto space-y-6">
-
-                        {/* 🌸 HEADER BAR */}
+                    <>
+                        {/* HEADER */}
                         <div className="flex justify-between items-center">
                             <div>
                                 <h1 className="text-2xl font-semibold text-gray-800">
@@ -79,9 +82,10 @@ const Recomendation = () => {
                             )}
                         </div>
 
-                        {/* 💎 SAME GRID */}
+                        {/* GRID */}
                         <div className="grid md:grid-cols-3 gap-6">
 
+                            {/* SUBJECT */}
                             <div className="col-span-2 bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
                                 <h3 className="text-lg text-gray-500 mb-2">Focus Subject</h3>
                                 <p className="text-2xl font-semibold text-gray-800">
@@ -92,147 +96,171 @@ const Recomendation = () => {
                                 </p>
                             </div>
 
+                            {/* HOURS + BUTTON */}
                             <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-3xl shadow-md border border-white/60 flex flex-col justify-center items-center text-center">
+
                                 <p className="text-xs text-gray-500 uppercase tracking-wide">
                                     Study Time
                                 </p>
+
                                 <p className="text-3xl font-bold text-gray-800 mt-2">
                                     {topPlan.hours}h
                                 </p>
+
                                 <p className="text-xs text-gray-500 mt-1">
                                     Recommended today
                                 </p>
+
+                                <div className="mt-4">
+                                    <StartSession
+                                        recommendation={topPlan}
+                                        fetchdata={() => {
+                                            frecdata();
+                                            fetchprogress();
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
 
-                        {/* PROGRESS + MESSAGE same as yours */}
-                    </div>
-                )}
+                        {/* PROGRESS + MESSAGE */}
+                        <div className="grid md:grid-cols-2 gap-6">
 
-                {/* 📊 PROGRESS + MESSAGE */}
-                <div className="grid md:grid-cols-2 gap-6">
+                            {/* PROGRESS */}
+                            <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
+                                <h3 className="text-sm text-gray-500 mb-3">
+                                    📊 Progress Overview
+                                </h3>
 
-                    {/* 📊 PROGRESS */}
-                    <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
-                        <h3 className="text-sm text-gray-500 mb-3">
-                            📊 Progress Overview
-                        </h3>
+                                <Progress progress={progress} />
+                            </div>
 
-                        <Progress progress={progress} />
-                    </div>
+                            {/* MESSAGE */}
+                            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-3xl border border-purple-100 shadow-sm flex flex-col justify-between">
 
-                    {/* 💬 MESSAGE */}
-                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-3xl border border-purple-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <h3 className="text-sm text-gray-500 mb-2">
-                                💬 Insight
-                            </h3>
+                                <div>
+                                    <h3 className="text-sm text-gray-500 mb-2">
+                                        💬 Insight
+                                    </h3>
 
-                            <p className="text-purple-600 italic text-sm leading-relaxed">
-                                {topPlan?.message}
-                            </p>
-
-                            <StartSession
-                                recommendation={topPlan}
-                                fetchdata={() => {
-                                    frecdata();
-                                    fetchprogress();
-                                }}
-                            />
-
-                        </div>
-
-                        {/* REASONS */}
-                        <div className="mt-4 flex flex-wrap gap-2">
-                            {topPlan?.reasons?.map((r, i) => {
-                                let style = "bg-gray-100 text-gray-600";
-
-                                if (r.includes("Deadline missed")) {
-                                    style = "bg-red-50 text-red-500";
-                                } else if (r.includes("Low progress")) {
-                                    style = "bg-blue-50 text-blue-500";
-                                } else if (r.includes("High priority")) {
-                                    style = "bg-purple-50 text-purple-500";
-                                }
-
-                                return (
-                                    <span
-                                        key={i}
-                                        className={`px-3 py-1 text-xs rounded-full border ${style}`}
-                                    >
-                                        {r}
-                                    </span>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-
-                {otherPlans.length > 0 && (
-                    <div className="max-w-5xl mx-auto mt-10">
-
-                        {/* HEADER */}
-                        <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                            📌 Continue Your Other Plans
-                        </h2>
-
-                        {/* LIST */}
-                        <div className="space-y-4">
-
-                            {otherPlans.map((plan) => (
-                                <div
-                                    key={plan.id}
-                                    className="bg-white/70 backdrop-blur-xl p-5 rounded-2xl 
-                     shadow-sm border border-white/50 
-                     hover:shadow-md transition flex justify-between items-center"
-                                >
-
-                                    {/* LEFT SIDE */}
-                                    <div>
-                                        <h3 className="text-md font-semibold text-gray-800">
-                                            {plan.subject}
-                                        </h3>
-                                        <p className="text-sm text-gray-400">
-                                            {plan.topic}
-                                        </p>
-
-                                        {/* SMALL REASONS */}
-                                        <div className="flex gap-2 mt-2 flex-wrap">
-                                            {plan.reasons?.slice(0, 2).map((r, i) => (
-                                                <span
-                                                    key={i}
-                                                    className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full"
-                                                >
-                                                    {r}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* RIGHT SIDE */}
-                                    <div className="text-right">
-                                        <p className="text-sm font-semibold text-purple-500">
-                                            ⏱ {plan.hours}h
-                                        </p>
-                                        <p className="text-xs text-gray-400">
-                                            {plan.progress}%
-                                        </p>
-                                    </div>
-
+                                    <p className="text-purple-600 italic text-sm leading-relaxed">
+                                        {topPlan.message}
+                                    </p>
                                 </div>
-                            ))}
 
+                                {/* REASONS */}
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    {topPlan.reasons?.map((r, i) => (
+                                        <span
+                                            key={i}
+                                            className="px-3 py-1 text-xs rounded-full border bg-gray-100 text-gray-600"
+                                        >
+                                            {r}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
 
+                {/* 📌 OTHER PLANS */}
+              {otherPlans.length > 0 && (
+  <div className="max-w-5xl mx-auto mt-14">
 
+    {/* HEADER */}
+    <h2 className="text-xl font-semibold text-gray-800 mb-4">
+      📌 Continue Your Plans
+    </h2>
 
+    {/* SCROLL CONTAINER */}
+    <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
 
+      {otherPlans.map((plan) => {
+        const p = getProgress(plan.id)
+        const progressValue = p?.progress || 0
+
+        return (
+          <div
+            key={plan.id}
+            className="min-w-[280px] max-w-[280px] snap-center 
+                       bg-white/80 backdrop-blur-xl 
+                       p-5 rounded-3xl 
+                       border border-white/60 
+                       shadow-md 
+                       transition hover:shadow-xl hover:scale-[1.02]"
+          >
+
+            {/* SUBJECT */}
+            <div>
+              <h3 className="text-md font-semibold text-gray-800">
+                {plan.subject}
+              </h3>
+              <p className="text-xs text-gray-400">
+                {plan.topic}
+              </p>
+            </div>
+
+            {/* MINI PROGRESS */}
+            <div className="mt-4">
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-700"
+                  style={{ width: `${progressValue}%` }}
+                ></div>
+              </div>
+
+              <p className="text-[11px] text-gray-400 mt-1">
+                {progressValue}% completed
+              </p>
+            </div>
+
+            {/* HOURS */}
+            <div className="mt-4 flex justify-between items-center">
+              <span className="text-xs text-gray-400">Today</span>
+              <span className="text-sm font-semibold text-purple-500">
+                {plan.hours}h
+              </span>
+            </div>
+
+            {/* MESSAGE */}
+            <div className="mt-4 bg-purple-50 border border-purple-100 p-3 rounded-xl">
+              <p className="text-xs text-purple-600 italic line-clamp-2">
+                {plan.message}
+              </p>
+            </div>
+
+            {/* REASONS */}
+            <div className="mt-3 flex flex-wrap gap-1">
+              {plan.reasons?.slice(0, 2).map((r, i) => (
+                <span
+                  key={i}
+                  className="text-[10px] px-2 py-1 bg-gray-100 text-gray-500 rounded-full"
+                >
+                  {r}
+                </span>
+              ))}
+            </div>
+
+            {/* ACTION */}
+            <div className="mt-5 flex justify-end">
+              <StartSession
+                recommendation={plan}
+                fetchdata={() => {
+                  frecdata()
+                  fetchprogress()
+                }}
+              />
+            </div>
+
+          </div>
+        )
+      })}
+    </div>
+  </div>
+)}
             </div>
         </div>
-
-
     )
 }
 
