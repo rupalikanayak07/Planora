@@ -60,63 +60,63 @@ const StartSession = ({ recommendation, fetchdata }) => {
     };
 
     return (
-        
 
-            <div className="bg-gradient-to-br from-white to-purple-50 border border-purple-100 rounded-3xl p-5 shadow-lg flex flex-col items-center gap-4 transition hover:shadow-xl">
 
-                {/* 🌸 TITLE */}
-                <p className="text-xs text-gray-400 uppercase tracking-widest">
-                    Study Session
-                </p>
+        <div className="bg-gradient-to-br from-white to-purple-50 border border-purple-100 rounded-3xl p-5 shadow-lg flex flex-col items-center gap-4 transition hover:shadow-xl">
 
-                {/* ⏱ TIMER */}
-                <div className="relative flex items-center justify-center">
+            {/* 🌸 TITLE */}
+            <p className="text-xs text-gray-400 uppercase tracking-widest">
+                Study Session
+            </p>
 
-                    {/* SOFT GLOW */}
-                    <div className="absolute w-28 h-28 bg-purple-200 rounded-full blur-2xl opacity-40"></div>
+            {/* ⏱ TIMER */}
+            <div className="relative flex items-center justify-center">
 
-                    {/* TIMER BOX */}
-                    <div className="relative bg-white px-6 py-4 rounded-2xl shadow-inner border border-gray-100">
-                        <span className="text-3xl font-bold text-purple-700 tracking-widest">
-                            {formatTime(seconds)}
-                        </span>
-                    </div>
+                {/* SOFT GLOW */}
+                <div className="absolute w-28 h-28 bg-purple-200 rounded-full blur-2xl opacity-40"></div>
+
+                {/* TIMER BOX */}
+                <div className="relative bg-white px-6 py-4 rounded-2xl shadow-inner border border-gray-100">
+                    <span className="text-3xl font-bold text-purple-700 tracking-widest">
+                        {formatTime(seconds)}
+                    </span>
                 </div>
+            </div>
 
-                {/* 🔘 BUTTON */}
-                {!running ? (
-                    <button
-                        onClick={startStudy}
-                        className="px-6 py-2.5 rounded-xl text-sm font-semibold 
+            {/* 🔘 BUTTON */}
+            {!running ? (
+                <button
+                    onClick={startStudy}
+                    className="px-6 py-2.5 rounded-xl text-sm font-semibold 
                bg-gradient-to-r from-purple-400 to-pink-400 text-white
                shadow-md hover:shadow-lg 
                hover:scale-[1.03] active:scale-95 
                transition duration-300 flex items-center justify-center gap-2"
-                    >
-                        <span className="text-xs opacity-90">▶</span>
-                        Start Focus
-                    </button>
-                ) : (
-                    <button
-                        onClick={stopStudy}
-                        className="px-6 py-2.5 rounded-xl text-sm font-semibold 
+                >
+                    <span className="text-xs opacity-90">▶</span>
+                    Start Focus
+                </button>
+            ) : (
+                <button
+                    onClick={stopStudy}
+                    className="px-6 py-2.5 rounded-xl text-sm font-semibold 
                bg-gradient-to-r from-rose-400 to-pink-400 text-white
                shadow-md hover:shadow-lg 
                hover:scale-[1.03] active:scale-95 
                transition duration-300 flex items-center justify-center gap-2"
-                    >
-                        <span className="text-xs opacity-90">■</span>
-                        End Session
-                    </button>
-                )}
+                >
+                    <span className="text-xs opacity-90">■</span>
+                    End Session
+                </button>
+            )}
 
-                {/* ✨ STATUS */}
-                <p className="text-xs text-gray-400">
-                    {running ? "Session in progress..." : "Ready to start"}
-                </p>
+            {/* ✨ STATUS */}
+            <p className="text-xs text-gray-400">
+                {running ? "Session in progress..." : "Ready to start"}
+            </p>
 
-            </div>
-       
+        </div>
+
 
     )
 }

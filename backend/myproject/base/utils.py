@@ -43,6 +43,10 @@ def get_mood_msg(mood):
     return random.choice(messages.get(mood, ["Keep going!"]))
 
 
+
+
+
+
 def gen_recommendation(user):
 
     plans = StudyPlan.objects.filter(user=user)
@@ -51,90 +55,110 @@ def gen_recommendation(user):
     mood_obj = Mood.objects.filter(user=user).order_by('-id').first()
     mood = mood_obj.mood if mood_obj else "motivated"
 
-    best_plan = None
-    highest_priority = 0
-    final_data = {}
+    all_plans = []
 
     for plan in plans:
 
         sessions = StudySession.objects.filter(user=user, study_plan=plan)
-
         total_done = sum(s.hours_studied for s in sessions)
 
         progress = (total_done / plan.total_hour) * 100 if plan.total_hour > 0 else 0
-
-        days_left = (plan.deadline - today).days
         remaining_hours = plan.total_hour - total_done
+        days_left = (plan.deadline - today).days
 
-        # if deadline is missed
+        # -----------------------------
+        # 🔥 HANDLE MISSED DEADLINE
+        # -----------------------------
+        is_missed = False
 
         if days_left <= 0 and progress < 100:
-            plan.is_missed=True
-            plan.save()
-            days_left = 2    
-            priority = (remaining_hours / days_left) + 5 
-  
-          
+            is_missed = True
+            days_left = 2  # recovery window
 
-        #  BASE PRIORITY
+        if days_left <= 0:
+            continue  # skip completed or invalid
+
+        # -----------------------------
+        # 🎯 PRIORITY CALCULATION
+        # -----------------------------
         priority = remaining_hours / days_left
 
+        if progress < 50:
+            priority += 2
 
-        #  SELECT BEST PLAN
-        if priority > highest_priority:
-            highest_priority = priority
+        if days_left < 3:
+            priority += 3
 
-            hours = remaining_hours / days_left
+        if plan.difficulty == "hard":
+            priority += 2
+        elif plan.difficulty == "medium":
+            priority += 1
+        elif plan.difficulty == "easy":
+            priority -= 1
 
+        if is_missed:
+            priority += 5  # highest boost
 
-            #  Mood adjustment
-            message = "Stay consistent 💪"
-            if plan.is_missed:
-               message = " Deadline missed! Let's recover fast 🚀"
-            elif mood == "tired":
-                hours *= 0.7
-                message = "Take it light today 😌"
-            elif mood == "stressed":
-                hours *= 0.8
-                message = "Focus on one thing calmly 🌿"
-            elif mood == "motivated":
-                hours *= 1.3
-                message = "Push your limits today 🚀"
+        # -----------------------------
+        # ⏱ DAILY HOURS
+        # -----------------------------
+        hours = remaining_hours / days_left
 
+        # -----------------------------
+        # 💬 MESSAGE (MOOD BASED)
+        # -----------------------------
+        message = "Stay consistent 💪"
 
-            #  Reasons (VERY IMPRESSIVE)
-            reasons = []
+        if is_missed:
+            message = "Deadline missed! Let's recover fast 🚀"
+        elif mood == "tired":
+            hours *= 0.7
+            message = "Take it light today 😌"
+        elif mood == "stressed":
+            hours *= 0.8
+            message = "Focus calmly 🌿"
+        elif mood == "motivated":
+            hours *= 1.3
+            message = "Push your limits 🚀"
 
-            if plan.is_missed:
-                reasons.append("Deadline missed")
-                reasons.append("High priority recovery")
-            elif days_left < 3 and days_left >= 0:
-                priority += 3
-                reasons.append("Deadline is near")
-                
-            if progress < 50:
-                priority += 2
-                reasons.append("Low progress")
+        # -----------------------------
+        # 📌 REASONS
+        # -----------------------------
+        reasons = []
 
-           
-            if plan.difficulty == "hard":
-                priority += 2
-                reasons.append("High difficulty")
-            if plan.difficulty == "easy":
-                priority -= 1
+        if is_missed:
+            reasons.append("Deadline missed")
+            reasons.append("High priority recovery")
 
-            best_plan = plan
-            
-            final_data = {
-                "id":plan.id,
-                "subject": plan.subject,
-                "topic": plan.topic,
-                "hours": round(hours, 1),
-                "progress": round(progress, 1),
-                "message": message,
-                "reasons": reasons
-            }
+        if progress < 50:
+            reasons.append("Low progress")
 
-    
+        if days_left < 3:
+            reasons.append("Deadline is near")
 
-    return final_data
+        if plan.difficulty == "hard":
+            reasons.append("High difficulty")
+
+        # -----------------------------
+        # 📦 ADD TO LIST
+        # -----------------------------
+        all_plans.append({
+            "id": plan.id,
+            "subject": plan.subject,
+            "topic": plan.topic,
+            "progress": round(progress, 1),
+            "hours": round(hours, 1),
+            "priority": priority,
+            "message": message,
+            "reasons": reasons
+        })
+
+    # -----------------------------
+    # 🔥 SORT BY PRIORITY
+    # -----------------------------
+    sorted_plans = sorted(all_plans, key=lambda x: x["priority"], reverse=True)
+
+    return {
+        "top": sorted_plans[0] if sorted_plans else None,
+        "others": sorted_plans[1:]
+    }

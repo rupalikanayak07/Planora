@@ -5,9 +5,11 @@ import StartSession from './StartSession'
 
 
 const Recomendation = () => {
-    const [recommendation, setrecomendation] = useState([])
-    const [progress, setprogress] = useState([])
 
+    const [topPlan, setTopPlan] = useState(null)
+    const [otherPlans, setOtherPlans] = useState([])
+
+    const [progress,setprogress]=useState([])
     const frecdata = async (params) => {
         const token = localStorage.getItem("access");
         try {
@@ -18,8 +20,10 @@ const Recomendation = () => {
                     },
                 }
             )
-            setrecomendation(res.data)
-           
+            // console.log(res.data.others)
+            setTopPlan(res.data.top)
+            setOtherPlans(res.data.others)
+
         } catch (error) {
             console.log(error)
         }
@@ -54,49 +58,56 @@ const Recomendation = () => {
 
             <div className="max-w-5xl mx-auto space-y-6">
 
-                {/* 🌸 HEADER BAR */}
-                <div className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl font-semibold text-gray-800">
-                            📚 Your Study Plan
-                        </h1>
-                        <p className="text-sm text-gray-400">
-                            Personalized insights for today
-                        </p>
+                {topPlan && (
+                    <div className="max-w-5xl mx-auto space-y-6">
+
+                        {/* 🌸 HEADER BAR */}
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h1 className="text-2xl font-semibold text-gray-800">
+                                    📚 Your Study Plan
+                                </h1>
+                                <p className="text-sm text-gray-400">
+                                    Personalized insights for today
+                                </p>
+                            </div>
+
+                            {topPlan.reasons?.includes("Deadline missed") && (
+                                <span className="bg-red-50 text-red-500 px-4 py-1 rounded-full text-sm border border-red-200 shadow-sm">
+                                    ⚠ Recovery Mode
+                                </span>
+                            )}
+                        </div>
+
+                        {/* 💎 SAME GRID */}
+                        <div className="grid md:grid-cols-3 gap-6">
+
+                            <div className="col-span-2 bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
+                                <h3 className="text-lg text-gray-500 mb-2">Focus Subject</h3>
+                                <p className="text-2xl font-semibold text-gray-800">
+                                    {topPlan.subject}
+                                </p>
+                                <p className="text-sm text-gray-400 mt-1">
+                                    {topPlan.topic}
+                                </p>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-3xl shadow-md border border-white/60 flex flex-col justify-center items-center text-center">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">
+                                    Study Time
+                                </p>
+                                <p className="text-3xl font-bold text-gray-800 mt-2">
+                                    {topPlan.hours}h
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Recommended today
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* PROGRESS + MESSAGE same as yours */}
                     </div>
-
-                    <span className="bg-red-50 text-red-500 px-4 py-1 rounded-full text-sm border border-red-200 shadow-sm">
-                        ⚠ Recovery Mode
-                    </span>
-                </div>
-
-                {/* 💎 TOP GRID */}
-                <div className="grid md:grid-cols-3 gap-6">
-
-                    {/* 📘 SUBJECT CARD */}
-                    <div className="col-span-2 bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-md border border-white/50">
-                        <h3 className="text-lg text-gray-500 mb-2">Focus Subject</h3>
-                        <p className="text-2xl font-semibold text-gray-800">
-                            {recommendation.subject}
-                        </p>
-                        <p className="text-sm text-gray-400 mt-1">
-                            {recommendation.topic}
-                        </p>
-                    </div>
-
-                    {/* ⏱ HOURS CARD */}
-                    <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-6 rounded-3xl shadow-md border border-white/60 flex flex-col justify-center items-center text-center">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">
-                            Study Time
-                        </p>
-                        <p className="text-3xl font-bold text-gray-800 mt-2">
-                            {recommendation.hours}h
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                            Recommended today
-                        </p>
-                    </div>
-                </div>
+                )}
 
                 {/* 📊 PROGRESS + MESSAGE */}
                 <div className="grid md:grid-cols-2 gap-6">
@@ -118,11 +129,11 @@ const Recomendation = () => {
                             </h3>
 
                             <p className="text-purple-600 italic text-sm leading-relaxed">
-                                {recommendation.message}
+                                {topPlan?.message}
                             </p>
 
                             <StartSession
-                                recommendation={recommendation}
+                                recommendation={topPlan}
                                 fetchdata={() => {
                                     frecdata();
                                     fetchprogress();
@@ -133,7 +144,7 @@ const Recomendation = () => {
 
                         {/* REASONS */}
                         <div className="mt-4 flex flex-wrap gap-2">
-                            {recommendation.reasons?.map((r, i) => {
+                            {topPlan?.reasons?.map((r, i) => {
                                 let style = "bg-gray-100 text-gray-600";
 
                                 if (r.includes("Deadline missed")) {
@@ -157,7 +168,63 @@ const Recomendation = () => {
                     </div>
                 </div>
 
-                {/* 🚀 ACTION BAR */}
+                {otherPlans.length > 0 && (
+                    <div className="max-w-5xl mx-auto mt-10">
+
+                        {/* HEADER */}
+                        <h2 className="text-lg font-semibold text-gray-700 mb-4">
+                            📌 Continue Your Other Plans
+                        </h2>
+
+                        {/* LIST */}
+                        <div className="space-y-4">
+
+                            {otherPlans.map((plan) => (
+                                <div
+                                    key={plan.id}
+                                    className="bg-white/70 backdrop-blur-xl p-5 rounded-2xl 
+                     shadow-sm border border-white/50 
+                     hover:shadow-md transition flex justify-between items-center"
+                                >
+
+                                    {/* LEFT SIDE */}
+                                    <div>
+                                        <h3 className="text-md font-semibold text-gray-800">
+                                            {plan.subject}
+                                        </h3>
+                                        <p className="text-sm text-gray-400">
+                                            {plan.topic}
+                                        </p>
+
+                                        {/* SMALL REASONS */}
+                                        <div className="flex gap-2 mt-2 flex-wrap">
+                                            {plan.reasons?.slice(0, 2).map((r, i) => (
+                                                <span
+                                                    key={i}
+                                                    className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded-full"
+                                                >
+                                                    {r}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* RIGHT SIDE */}
+                                    <div className="text-right">
+                                        <p className="text-sm font-semibold text-purple-500">
+                                            ⏱ {plan.hours}h
+                                        </p>
+                                        <p className="text-xs text-gray-400">
+                                            {plan.progress}%
+                                        </p>
+                                    </div>
+
+                                </div>
+                            ))}
+
+                        </div>
+                    </div>
+                )}
 
 
 
