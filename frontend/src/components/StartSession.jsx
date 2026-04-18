@@ -41,6 +41,7 @@ const StartSession = ({ recommendation, fetchdata }) => {
                     },
                 }
             )
+            setRefreshNav(prev => !prev)
             setTimeout(() => {
                 fetchdata();
             }, 500);
@@ -62,7 +63,7 @@ const StartSession = ({ recommendation, fetchdata }) => {
     return (
 
 
-        <div className="bg-gradient-to-br from-white to-purple-50 border border-purple-100 rounded-3xl p-5 shadow-lg flex flex-col items-center gap-4 transition hover:shadow-xl">
+        <div className="bg-gradient-to-br from-white to-purple-50 border border-purple-100 rounded-3xl px-4 py-2 shadow-lg flex flex-col items-center gap-4 transition hover:shadow-xl">
 
             {/* 🌸 TITLE */}
             <p className="text-xs text-gray-400 uppercase tracking-widest">
