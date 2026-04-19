@@ -62,7 +62,6 @@ def add_study_session(request):
     if ser_data.is_valid():
         ser_data.save(user=request.user)
         return Response({"message":"study session added"})
-
     return Response(ser_data.errors)
 
 @api_view(['GET'])
@@ -70,55 +69,41 @@ def progress(request):
     plans=StudyPlan.objects.filter(user=request.user)
     data=[]
     
-
     for plan in plans:
-        sessions= StudySession.objects.filter(
-            user=request.user,
-            study_plan=plan
-        )
-        
+        sessions = StudySession.objects.filter(user=request.user, study_plan=plan)
 
-    total_hours=sum(s.hours_studied for  s in sessions)
+        total_done = sum(s.hours_studied for s in sessions)
 
-    if plan.total_hour>0:
-        progress=(total_hours/plan.total_hour)* 100 
-    else:
-        progress=0
+        progress = (total_done / plan.total_hour) * 100 if plan.total_hour > 0 else 0
 
-    data.append({
+        data.append({
+            "study_plan": plan.id,   
             "subject": plan.subject,
             "topic": plan.topic,
             "total_hours": plan.total_hour,
-            "completed_hours": total_hours,
+            "completed_hours": round(total_done, 2),
             "progress": round(progress, 1)
         })
-
     return Response(data)
     
-
 
 @api_view(['POST'])
 def add_mood(request):
     ser_data=MoodSerializer(data=request.data)
-
     if ser_data.is_valid():
         mood_obj=ser_data.save(user=request.user)
-
         message=get_mood_msg(mood_obj.mood)
 
         return Response({
             "mood":mood_obj.mood,
             "message":message
         })
-
     return Response(ser_data.errors)
 
 @api_view(['GET'])
 def recommendation(request):
-
     if not request.user.is_authenticated:
         return Response({"error": "User not logged in"}, status=401)
     data = gen_recommendation(request.user)
-   
     return Response(data)
     
