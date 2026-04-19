@@ -37,7 +37,7 @@ const Recomendation = () => {
         }
     }
 
-    //  MATCH PROGRESS WITH PLAN
+    // MATCH PROGRESS WITH PLAN
     const getProgress = (planId) => {
         return progress.find(p => p.id === planId)
     }
@@ -61,12 +61,12 @@ const Recomendation = () => {
                     </div>
                 )}
 
+
                 {/*  TOP PLAN */}
-                {/* 🔥 TOP PLAN */}
                 {topPlan && (
                     <div className="space-y-6">
 
-                        {/* 🌸 HEADER */}
+                        {/*  HEADER */}
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
@@ -84,10 +84,10 @@ const Recomendation = () => {
                             )}
                         </div>
 
-                        {/* 💎 MAIN GRID */}
+                        {/*  MAIN GRID */}
                         <div className="grid md:grid-cols-3 gap-6">
 
-                            {/* 🧊 LEFT SECTION */}
+                            {/*  LEFT SECTION */}
                             <div className="md:col-span-2 space-y-5">
 
                                 {/* SUBJECT + PROGRESS */}
@@ -107,7 +107,8 @@ const Recomendation = () => {
 
                                             <p className="text-xs sm:text-sm text-gray-400 mt-1">
                                                 {topPlan.topic}
-                                            </p>
+                                            </
+                                            p>
                                         </div>
 
                                         {/* PROGRESS */}
@@ -117,13 +118,13 @@ const Recomendation = () => {
                                                 📊 Progress
                                             </h3>
 
-                                            <Progress progress={progress} />
+                                            <Progress progress={topPlan ? [topPlan] : []} progressdata={progress} />
                                         </div>
 
                                     </div>
                                 </div>
 
-                                {/* 💬 MESSAGE + REASONS */}
+                                {/*  MESSAGE + REASONS */}
                                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-5 sm:p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
 
                                     <p className="text-purple-600 italic text-sm leading-relaxed">
@@ -190,86 +191,98 @@ const Recomendation = () => {
                         {/* SCROLL CONTAINER */}
                         <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
 
-                            {otherPlans.map((plan) => {
-                                const p = getProgress(plan.id)
-                                const progressValue = p?.progress || 0
+                            <div className="flex gap-5 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
 
-                                return (
-                                    <div
-                                        key={plan.id}
-                                        className="min-w-[280px] max-w-[280px] snap-center 
-                       bg-white/80 backdrop-blur-xl 
-                       p-5 rounded-3xl 
-                       border border-white/60 
-                       shadow-md 
-                       transition hover:shadow-xl hover:scale-[1.02]"
-                                    >
+                                {otherPlans.map((plan) => {
+                                    const p = getProgress(plan.id);
+                                    const progressValue = p?.progress || 0;
 
-                                        {/* SUBJECT */}
-                                        <div>
-                                            <h3 className="text-md font-semibold text-gray-800">
-                                                {plan.subject}
-                                            </h3>
-                                            <p className="text-xs text-gray-400">
-                                                {plan.topic}
-                                            </p>
-                                        </div>
+                                    return (
+                                        <div
+                                            key={plan.id}
+                                            className="min-w-[300px] max-w-[300px] snap-center 
+        bg-white/80 backdrop-blur-xl 
+        p-5 rounded-3xl 
+        border border-white/60 
+        shadow-md 
+        transition duration-300 
+        hover:shadow-[0_10px_30px_rgba(168,85,247,0.15)] hover:-translate-y-1"
+                                        >
 
-                                        {/* MINI PROGRESS */}
-                                        <div className="mt-4">
-                                            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full rounded-full bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-700"
-                                                    style={{ width: `${progressValue}%` }}
-                                                ></div>
+                                            {/* TOP ROW */}
+                                            <div className="flex justify-between items-start">
+
+                                                <div>
+                                                    <h3 className="text-[15px] font-semibold text-gray-800">
+                                                        {plan.subject}
+                                                    </h3>
+                                                    <p className="text-[11px] text-gray-400">
+                                                        {plan.topic}
+                                                    </p>
+                                                </div>
+
+                                                {/* SMALL HOURS BADGE */}
+                                                <span className="text-[11px] px-2 py-1 rounded-full bg-purple-50 text-purple-500 border border-purple-100">
+                                                    {plan.hours}h
+                                                </span>
                                             </div>
 
-                                            <p className="text-[11px] text-gray-400 mt-1">
-                                                {progressValue}% completed
-                                            </p>
-                                        </div>
+                                            {/*  PROGRESS BAR */}
+                                            <div className="mt-4">
+                                                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full rounded-full bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-700"
+                                                        style={{ width: `${progressValue}%` }}
+                                                    />
+                                                </div>
 
-                                        {/* HOURS */}
-                                        <div className="mt-4 flex justify-between items-center">
-                                            <span className="text-xs text-gray-400">Today</span>
-                                            <span className="text-sm font-semibold text-purple-500">
-                                                {plan.hours}h
-                                            </span>
-                                        </div>
+                                                <div className="flex justify-between mt-1 text-[10px] text-gray-400">
+                                                    <span>Progress</span>
+                                                    <span>{progressValue}%</span>
+                                                </div>
+                                            </div>
 
-                                        {/* MESSAGE */}
-                                        <div className="mt-4 bg-purple-50 border border-purple-100 p-3 rounded-xl">
-                                            <p className="text-xs text-purple-600 italic line-clamp-2">
-                                                {plan.message}
-                                            </p>
-                                        </div>
+                                            {/*  MESSAGE */}
+                                            <div className="mt-4 bg-gradient-to-br from-purple-50 to-pink-50 p-3 rounded-2xl border border-purple-100">
+                                                <p className="text-[11px] text-purple-600 italic leading-relaxed line-clamp-2">
+                                                    {plan.message}
+                                                </p>
+                                            </div>
 
-                                        {/* REASONS */}
-                                        <div className="mt-3 flex flex-wrap gap-1">
-                                            {plan.reasons?.slice(0, 2).map((r, i) => (
-                                                <span
-                                                    key={i}
-                                                    className="text-[10px] px-2 py-1 bg-gray-100 text-gray-500 rounded-full"
-                                                >
-                                                    {r}
+                                            {/*  REASONS */}
+                                            <div className="mt-3 flex flex-wrap gap-1">
+                                                {plan.reasons?.slice(0, 2).map((r, i) => (
+                                                    <span
+                                                        key={i}
+                                                        className="text-[10px] px-2 py-1 bg-white border text-gray-500 rounded-full shadow-sm"
+                                                    >
+                                                        {r}
+                                                    </span>
+                                                ))}
+                                            </div>
+
+                                            {/* ACTION */}
+                                            <div className="mt-4 flex justify-between items-center">
+
+                                                <span className="text-[10px] text-gray-400">
+                                                    Keep going 💪
                                                 </span>
-                                            ))}
-                                        </div>
 
-                                        {/* ACTION */}
-                                        <div className="mt-5 flex justify-end">
-                                            <StartSession
-                                                recommendation={plan}
-                                                fetchdata={() => {
-                                                    frecdata()
-                                                    fetchprogress()
-                                                }}
-                                            />
-                                        </div>
+                                                <StartSession
+                                                    recommendation={plan}
+                                                    fetchdata={() => {
+                                                        frecdata();
+                                                        fetchprogress();
+                                                    }}
+                                                />
+                                            </div>
 
-                                    </div>
-                                )
-                            })}
+                                        </div>
+                                    );
+                                })}
+
+                            </div>
+
                         </div>
                     </div>
                 )}

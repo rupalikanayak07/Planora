@@ -66,8 +66,8 @@ def gen_recommendation(user):
         remaining_hours = plan.total_hour - total_done
         days_left = (plan.deadline - today).days
 
-        # -----------------------------
-        # 🔥 HANDLE MISSED DEADLINE
+       
+        #  HANDLE MISSED DEADLINE
         # -----------------------------
         is_missed = False
 
@@ -78,8 +78,8 @@ def gen_recommendation(user):
         if days_left <= 0:
             continue  # skip completed or invalid
 
-        # -----------------------------
-        # 🎯 PRIORITY CALCULATION
+       
+        #  PRIORITY CALCULATION
         # -----------------------------
         priority = remaining_hours / days_left
 
@@ -99,14 +99,14 @@ def gen_recommendation(user):
         if is_missed:
             priority += 5  # highest boost
 
-        # -----------------------------
-        # ⏱ DAILY HOURS
-        # -----------------------------
+        
+        #  DAILY HOURS
+       
         hours = remaining_hours / days_left
 
-        # -----------------------------
-        # 💬 MESSAGE (MOOD BASED)
-        # -----------------------------
+       
+        #  MESSAGE (MOOD BASED)
+       
         message = "Stay consistent 💪"
 
         if is_missed:
@@ -121,8 +121,8 @@ def gen_recommendation(user):
             hours *= 1.3
             message = "Push your limits 🚀"
 
-        # -----------------------------
-        # 📌 REASONS
+       
+        # REASONS
         # -----------------------------
         reasons = []
 
@@ -139,22 +139,24 @@ def gen_recommendation(user):
         if plan.difficulty == "hard":
             reasons.append("High difficulty")
 
-        # -----------------------------
-        # 📦 ADD TO LIST
+       
+        #  ADD TO LIST
         # -----------------------------
         all_plans.append({
             "id": plan.id,
             "subject": plan.subject,
             "topic": plan.topic,
             "progress": round(progress, 1),
+            "completed_hours": round(total_done, 2),
+            "total_hours": plan.total_hour,
             "hours": round(hours, 1),
             "priority": priority,
             "message": message,
             "reasons": reasons
         })
 
-    # -----------------------------
-    # 🔥 SORT BY PRIORITY
+    
+    #  SORT BY PRIORITY
     # -----------------------------
     sorted_plans = sorted(all_plans, key=lambda x: x["priority"], reverse=True)
 

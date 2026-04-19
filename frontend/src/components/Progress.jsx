@@ -2,66 +2,88 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
-const Progress = ({progress}) => {
-   
-    return (
-        <div>
+const Progress = ({ progress = [] }) => {
 
-            {progress.map((item, index) => {
+    if (!Array.isArray(progress) || progress.length === 0) {
+        return <p className="text-xs text-gray-400">No progress yet</p>;
+    }
+
+
+    return (
+        <div className="flex justify-center ">
+
+            {progress.map((item) => {
+
+                const completed = item.completed_hours ?? 0;
+                const total = item.total_hours ?? 1;
+                const percent = item.progress ?? 0;
 
                 const data = [
-                    { name: "Completed", value: item.completed_hours },
-                    { name: "Remaining", value: item.total_hours - item.completed_hours }
+                    { name: "Completed", value: percent },
+                    { name: "Remaining", value: 100 - percent }
                 ];
 
-                //  Dynamic gradient feel
-                const COLORS =
-                    item.progress < 30
-                        ? ["#F87171", "#f1f5f9"]   // red
-                        : item.progress < 70
-                            ? ["#FBBF24", "#F3F4F6"]   // yellow
-                            : ["#34D399", "#F3F4F6"];  // green
+                //  Color based on progress
+                const gradientId = `grad-${item.id}`;
 
                 return (
-                    <div
-                        key={index}>
-                        {/*  DONUT CHART */}
-                        <div className="relative flex items-center justify-center" >
+                    <div key={item.id}  className="relative flex flex-col items-center ">
 
-                            <PieChart width={200} height={200}>
-                                <Pie
-                                    data={data}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={65}
-                                    outerRadius={85}
-                                    dataKey="value"
-                                    paddingAngle={3}
-                                >
-                                    {data.map((entry, i) => (
-                                        <Cell key={i} fill={COLORS[i]} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
+                        <PieChart width={150} height={150}>
 
-                            {/*  CENTER TEXT */}
-                            <div className="absolute flex flex-col items-center">
-                                <span className="text-2xl font-bold text-gray-800">
-                                    {item.progress}%
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                    completed
-                                </span>
-                            </div>
+                            {/*  Gradient Definition */}
+                            <defs>
+                                <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+                                    {percent < 30 ? (
+                                        <>
+                                            <stop offset="0%" stopColor="#f87171" />
+                                            <stop offset="100%" stopColor="#fb7185" />
+                                        </>
+                                    ) : percent < 70 ? (
+                                        <>
+                                            <stop offset="0%" stopColor="#facc15" />
+                                            <stop offset="100%" stopColor="#f59e0b" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <stop offset="0%" stopColor="#34d399" />
+                                            <stop offset="100%" stopColor="#10b981" />
+                                        </>
+                                    )}
+                                </linearGradient>
+                            </defs>
 
+                            <Pie
+                                data={data}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={58}
+                                outerRadius={72}
+                                dataKey="value"
+                                startAngle={90}
+                                endAngle={-270}
+                                cornerRadius={18}
+                            >
+                                {/*  Gradient progress */}
+                                <Cell fill={`url(#${gradientId})`} />
+                                <Cell fill="#f1f5f9" />
+                            </Pie>
+                        </PieChart>
+
+                        {/*  Center Content */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <span className="text-xl font-semibold text-gray-800">
+                                {percent}%
+                            </span>
+                            <span className="text-[11px] text-gray-400">
+                                completed
+                            </span>
                         </div>
 
-                        {/*  DETAILS */}
-                        <div className="mt-4 text-center">
-                            <p className="text-sm text-gray-600">
-                                ⏱ {item.completed_hours} / {item.total_hours} hrs
-                            </p>
-                        </div> 
+                        {/*  Info */}
+                        <p className="text-xs text-gray-400 mt-2">
+                            {completed} / {total} hrs
+                        </p>
 
                     </div>
                 );
