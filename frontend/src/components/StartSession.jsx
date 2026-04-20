@@ -5,6 +5,8 @@ const StartSession = ({ recommendation, fetchdata }) => {
     const [seconds, setSeconds] = useState(0)
     const [running, setRunning] = useState(false)
 
+    
+
 
     useEffect(() => {
         let interval;
@@ -25,6 +27,7 @@ const StartSession = ({ recommendation, fetchdata }) => {
     const stopStudy = async () => {
         setRunning(false)
         const finalSeconds = seconds;
+        setSeconds(0);
         const hours = finalSeconds / 3600;
 
         try {
@@ -41,11 +44,8 @@ const StartSession = ({ recommendation, fetchdata }) => {
                     },
                 }
             )
-            setRefreshNav(prev => !prev)
-            setTimeout(() => {
-                fetchdata();
-            }, 500);
-            setSeconds(0);
+            fetchdata()
+
         } catch (error) {
             console.log(error)
         }
@@ -57,6 +57,8 @@ const StartSession = ({ recommendation, fetchdata }) => {
         const s = String(sec % 60).padStart(2, '0');
 
         return `${h}:${m}:${s}`;
+
+
     };
 
     return (
