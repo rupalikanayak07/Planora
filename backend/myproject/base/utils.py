@@ -141,7 +141,7 @@ def gen_recommendation(user):
 
        
         #  ADD TO LIST
-        # -----------------------------
+        # ---------------------------
         all_plans.append({
             "id": plan.id,
             "subject": plan.subject,

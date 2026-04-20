@@ -45,7 +45,6 @@ const StartSession = ({ recommendation, fetchdata }) => {
             setTimeout(() => {
                 fetchdata();
             }, 500);
-
             setSeconds(0);
         } catch (error) {
             console.log(error)
