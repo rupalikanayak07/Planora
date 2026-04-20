@@ -89,6 +89,9 @@ const Navbar = ({ refreshTrigger }) => {
                         <button className="px-4 py-1.5 text-xs rounded-full bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-100 transition">
                             <Link to='/plan'> + Plan</Link>
                         </button>
+                         <button className="px-4 py-1.5 text-xs rounded-full bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-100 transition">
+                            <Link to='/history'> completed plans</Link>
+                        </button>
 
                         <button className="px-4 py-1.5 text-xs rounded-full bg-pink-50 text-pink-600 border border-pink-200 hover:bg-pink-100 transition">
                             <Link to='/mood'>😊 Mood</Link>
@@ -134,6 +137,10 @@ const Navbar = ({ refreshTrigger }) => {
                             {/* ACTIONS */}
                             <button className="w-full text-left px-4 py-2 text-sm rounded-xl bg-purple-50 text-purple-600">
                                 <Link to='/plan'> + Plan</Link>
+
+                            </button>
+                             <button className="w-full text-left px-4 py-2 text-sm rounded-xl bg-purple-50 text-purple-600">
+                                <Link to='/history'> Completed Plan</Link>
 
                             </button>
 

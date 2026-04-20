@@ -1,10 +1,14 @@
 import React from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { routes } from '../routes/routes'
+import Navbar from '../components/Navbar'
 
 const Layout = () => {
     return (
-        <RouterProvider router={routes} />
+       <div>
+         <RouterProvider router={routes} />
+       
+       </div>
     )
 
 }

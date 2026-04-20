@@ -9,6 +9,7 @@ class StudyPlan(models.Model):
     topic=models.CharField(max_length=200)
     deadline=models.DateField()
     is_missed = models.BooleanField(default=False)
+    is_completed = models.BooleanField(default=False)
     total_hour=models.IntegerField()
     difficulty = models.CharField(
         max_length=10,
@@ -37,4 +38,18 @@ class Mood(models.Model):
         ]
         )
     date = models.DateField(auto_now_add=True)
-        
+
+class StudyHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE)
+
+    subject = models.CharField(max_length=100)
+    topic = models.CharField(max_length=200)
+
+    total_hours = models.FloatField()
+    completed_hours = models.FloatField()
+
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subject

@@ -56,12 +56,52 @@ def studyplan(request):
             return Response(ser_data.data)
         return Response(ser_data.errors)
     
-@api_view(["POST"])
+
+@api_view(['POST'])
 def add_study_session(request):
-    ser_data=StudySessionSerializer(data=request.data)
+
+    ser_data = StudySessionSerializer(data=request.data)
+
     if ser_data.is_valid():
-        ser_data.save(user=request.user)
-        return Response({"message":"study session added"})
+        session = ser_data.save(user=request.user)
+
+        plan = session.study_plan
+
+        #  calculate total completed hours
+        sessions = StudySession.objects.filter(
+            user=request.user,
+            study_plan=plan
+        )
+
+        total_done = sum(s.hours_studied for s in sessions)
+
+        #  CHECK IF COMPLETED
+        if total_done >= plan.total_hour:
+
+            # avoid duplicate history
+            if not StudyHistory.objects.filter(
+                user=request.user,
+                study_plan=plan
+            ).exists():
+
+                StudyHistory.objects.create(
+                    user=request.user,
+                    study_plan=plan,
+                    subject=plan.subject,
+                    topic=plan.topic,
+                    total_hours=plan.total_hour,
+                    completed_hours=total_done
+                )
+
+            # mark plan complete
+            plan.is_completed = True
+            plan.save()
+
+        return Response({
+            "message": "study session added",
+            "completed": plan.is_completed
+        })
+
     return Response(ser_data.errors)
 
 @api_view(['GET'])
@@ -107,3 +147,11 @@ def recommendation(request):
     data = gen_recommendation(request.user)
     return Response(data)
     
+
+@api_view(["GET"])
+def studyhistory(request):
+    history = StudyHistory.objects.filter(user=request.user).order_by('-completed_at')
+
+    serializer = StudyHistorySerializer(history, many=True)
+
+    return Response(serializer.data)

@@ -9,5 +9,6 @@ urlpatterns=[
     path('progress/',progress),
     path('mood/',add_mood),
     path('recommendation/',recommendation),
+    path('history/',studyhistory)
     
 ]

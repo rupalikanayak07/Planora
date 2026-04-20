@@ -272,9 +272,6 @@ const Recomendation = () => {
 
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     )

@@ -6,6 +6,7 @@ import Register from '../pages/Register'
 import Dashboard from '../pages/Dashboard'
 import AddStudyplan from '../components/AddStudyplan'
 import Moodpopup from '../components/Moodpopup'
+import History from '../pages/History'
 
 
 
@@ -31,6 +32,11 @@ export const routes = createBrowserRouter([
     {
         path: '/mood',
         element: <Moodpopup />,
+       
+    },
+    {
+        path: '/history',
+        element: <History />,
        
     },
 ])

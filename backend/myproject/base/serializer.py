@@ -35,3 +35,8 @@ class MoodSerializer(serializers.ModelSerializer):
         model=Mood
         fields='__all__'
         read_only_fields = ['user']
+
+class StudyHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudyHistory
+        fields = '__all__'
